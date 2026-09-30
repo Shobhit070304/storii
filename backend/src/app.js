@@ -13,14 +13,7 @@ export const app = express();
 // Enable CORS for frontend client
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, or Vite proxy)
-      if (!origin || origin === env.clientUrl || origin.startsWith("http://localhost:")) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS policy violation"));
-      }
-    },
+    origin: env.clientUrl,
     credentials: true,
   })
 );
