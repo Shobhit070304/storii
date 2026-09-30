@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Storii">
+  <rect width="64" height="64" fill="#F0EEE6" />
+  <rect x="0.5" y="0.5" width="63" height="63" fill="none" stroke="#17140F" stroke-opacity="0.35" />
+  <line x1="6" y1="10" x2="58" y2="10" stroke="#17140F" stroke-opacity="0.25" />
+  <line x1="6" y1="54" x2="58" y2="54" stroke="#17140F" stroke-opacity="0.25" />
+  <text
+    x="28"
+    y="46"
+    text-anchor="middle"
+    font-family="Times New Roman, Times, Georgia, serif"
+    font-size="40"
+    fill="#17140F"
+  >S</text>
+  <circle cx="44" cy="42" r="3" fill="#C2452D" />
+</svg>

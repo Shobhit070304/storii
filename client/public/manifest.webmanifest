@@ -1,0 +1,17 @@
+{
+  "name": "Storii — lived experience, on the record",
+  "short_name": "Storii",
+  "description": "Ask what you wish you knew. Read answers from people who were actually there.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#EAF0DF",
+  "theme_color": "#EAF0DF",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,361 @@
+/* DO NOT CHANGE */
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+/* DO NOT CHANGE */
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Storii editorial extensions */
+  --font-serif: "Times New Roman", "Nimbus Roman", "Liberation Serif", Times,
+    Georgia, serif;
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-vermillion: var(--vermillion);
+  --color-inkblue: var(--inkblue);
+  --color-moss: var(--moss);
+  --color-ochre: var(--ochre);
+  --color-plum: var(--plum);
+}
+
+/* CHANGE VALUES FOR THEME — Papery: green paper, river ink, thin rules */
+:root {
+  --radius: 0.125rem;
+
+  /* Reading faces: serif for the archive, sans for lived experience. */
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system,
+    "Helvetica Neue", Arial, sans-serif;
+
+  --paper: #eaf0df;
+  --paper-2: #f4f8eb;
+  --ink: #12211a;
+  --ink-2: #44543f;
+  --rule: color-mix(in srgb, #12211a 15%, transparent);
+  --rule-strong: color-mix(in srgb, #12211a 30%, transparent);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-2);
+  --card-foreground: var(--ink);
+  --popover: var(--paper-2);
+  --popover-foreground: var(--ink);
+  --primary: #1f3d27;
+  --primary-foreground: #f3f8e9;
+  --secondary: #dbe6ca;
+  --secondary-foreground: var(--ink);
+  --muted: #dfe8d1;
+  --muted-foreground: #596852;
+  --accent: #d5e5bf;
+  --accent-foreground: var(--ink);
+  --destructive: #b23a2c;
+  --border: var(--rule);
+  --input: color-mix(in srgb, #12211a 22%, transparent);
+  --ring: color-mix(in srgb, #12211a 45%, transparent);
+
+  /* The coastal plate this palette is drawn from */
+  --sky: #a8dce4;
+  --cloud: #fbf8ee;
+  --hill: #8fbf6a;
+  --meadow: #e3d276;
+  --rock: #5c6e68;
+  --dome: #d1483c;
+
+  /* Accents, read off the plate but leaning green: leaf, sea, hill,
+     meadow gold, dome red. */
+  --chart-1: #3d7a2f;
+  --chart-2: #2b6b78;
+  --chart-3: #6da54a;
+  --chart-4: #a87b1f;
+  --chart-5: #a34d3c;
+
+  --vermillion: #b8452f;
+  --inkblue: #2b6b78;
+  --moss: #3d7a2f;
+  --ochre: #9c7a1c;
+  --plum: #8a4a5f;
+
+  --wash-1: color-mix(in srgb, var(--hill) 62%, transparent);
+  --wash-2: color-mix(in srgb, var(--meadow) 40%, transparent);
+  --wash-3: color-mix(in srgb, #5f9448 40%, transparent);
+
+  --sidebar: var(--paper-2);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--ink);
+  --sidebar-primary-foreground: #f7f5ef;
+  --sidebar-accent: #dbe6ca;
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--rule);
+  --sidebar-ring: color-mix(in srgb, #12211a 45%, transparent);
+
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.dark {
+  --paper: #100e0b;
+  --paper-2: #17140f;
+  --ink: #efebe0;
+  --ink-2: #b3ab99;
+  --rule: color-mix(in srgb, #efebe0 15%, transparent);
+  --rule-strong: color-mix(in srgb, #efebe0 30%, transparent);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-2);
+  --card-foreground: var(--ink);
+  --popover: var(--paper-2);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: #17140f;
+  --secondary: #221e17;
+  --secondary-foreground: var(--ink);
+  --muted: #1e1b14;
+  --muted-foreground: #a49c8a;
+  --accent: #272219;
+  --accent-foreground: var(--ink);
+  --destructive: #d4614c;
+  --border: var(--rule);
+  --input: color-mix(in srgb, #efebe0 20%, transparent);
+  --ring: color-mix(in srgb, #efebe0 40%, transparent);
+
+  --chart-1: #e0705f;
+  --chart-2: #7cc2cb;
+  --chart-3: #9cc877;
+  --chart-4: #e0b45c;
+  --chart-5: #cf8fa8;
+
+  /* The same plate, after dark */
+  --sky: #7cc2cb;
+  --cloud: #e8e4d6;
+  --hill: #9cc877;
+  --meadow: #e0b45c;
+  --rock: #93a29b;
+  --dome: #e0705f;
+
+  --vermillion: #e0705f;
+  --inkblue: #7cc2cb;
+  --moss: #9cc877;
+  --ochre: #e0b45c;
+  --plum: #cf8fa8;
+
+  --wash-1: color-mix(in srgb, #4b4322 40%, transparent);
+  --wash-2: color-mix(in srgb, #1e4448 48%, transparent);
+  --wash-3: color-mix(in srgb, #2d4523 40%, transparent);
+
+  --sidebar: var(--paper-2);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--ink);
+  --sidebar-primary-foreground: #17140f;
+  --sidebar-accent: #272219;
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--rule);
+  --sidebar-ring: color-mix(in srgb, #efebe0 40%, transparent);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    font-family: var(--font-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--hill) 48%, transparent);
+  }
+  .dark ::selection {
+    background: color-mix(in srgb, var(--inkblue) 40%, transparent);
+  }
+  button:not([disabled]),
+  [role="button"]:not([disabled]) {
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  /* Jittering paper fibre — the "papery" motion of the page */
+  .storii-grain {
+    background-image: var(--grain);
+    background-size: 120px 120px;
+    opacity: 0.07;
+    mix-blend-mode: multiply;
+    animation: storii-jitter 1.6s steps(2, end) infinite;
+  }
+  .dark .storii-grain {
+    opacity: 0.05;
+    mix-blend-mode: screen;
+  }
+
+  /* Slow drifting colour washes behind the paper */
+  .storii-wash {
+    filter: blur(60px);
+    animation: storii-drift 34s ease-in-out infinite alternate;
+  }
+  .storii-wash-2 {
+    animation-duration: 46s;
+    animation-direction: alternate-reverse;
+  }
+  .storii-vignette {
+    background: radial-gradient(
+      120% 85% at 50% -10%,
+      transparent 58%,
+      color-mix(in srgb, var(--moss) 8%, transparent)
+    );
+  }
+
+  /* A soft green canopy hanging over the top of the page. */
+  .storii-canopy {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--hill) 34%, transparent) 0%,
+      color-mix(in srgb, var(--meadow) 16%, transparent) 40%,
+      transparent 76%
+    );
+  }
+
+  /* Rules, masthead lines and other print furniture */
+  .storii-rule {
+    border-bottom: 1px solid var(--rule);
+  }
+  .storii-double-rule {
+    border-bottom: 3px double var(--rule-strong);
+  }
+  .storii-blanket {
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  /* Ink underline that draws itself on hover. Uses the surrounding
+     category tone when there is one, vermillion otherwise. */
+  .storii-link {
+    background-image: linear-gradient(
+      var(--tone, var(--vermillion)),
+      var(--tone, var(--vermillion))
+    );
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1.5px;
+    transition: background-size 0.35s ease;
+  }
+  .storii-link:hover,
+  .storii-link:focus-visible {
+    background-size: 100% 1.5px;
+  }
+
+  .storii-caps {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+
+  .storii-rise {
+    animation: storii-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Answer column with a printed measure */
+  .storii-measure {
+    max-width: 68ch;
+  }
+
+  /* Lived experience is set in a sans face — easier to read at length than
+     the serif the rest of the archive is printed in. */
+  .storii-experience {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.72;
+    letter-spacing: 0.004em;
+  }
+}
+
+@keyframes storii-jitter {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(-1px, 1px, 0);
+  }
+  50% {
+    transform: translate3d(1px, -1px, 0);
+  }
+  75% {
+    transform: translate3d(-1px, -1px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes storii-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, -3%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-3%, 2%, 0) scale(1.02);
+  }
+}
+
+@keyframes storii-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .storii-grain,
+  .storii-wash,
+  .storii-rise {
+    animation: none !important;
+  }
+}
