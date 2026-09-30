@@ -13,7 +13,7 @@ export const app = express();
 // Enable CORS for frontend client
 app.use(
   cors({
-    origin: env.clientUrl,
+    origin: true,
     credentials: true,
   })
 );
