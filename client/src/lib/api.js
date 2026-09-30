@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
-const BACKEND_URL = (import.meta.env.BACKEND_URL || "").replace(/\/+$/, "");
-const API_BASE = BACKEND_URL ? `${BACKEND_URL}/api` : "/api";
+const API_BASE = (import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") || "") + "/api";
 
 export const auth = {
   getToken() {
