@@ -1,11 +1,12 @@
 import { AnswersList } from "@/components/AnswerCard";
 import { CategoryTag } from "@/components/CategoryTag";
 import { EmptyNote } from "@/components/EmptyNote";
+import { GoogleSignIn } from "@/components/GoogleSignIn";
 import { IdentityChoice } from "@/components/IdentityChoice";
 import { Kicker, PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { categoryName, toneStyle } from "@/lib/categories";
-import { api, auth, useQuestion, useAnswers, useQuestions } from "@/lib/api";
+import { api, useAuth, useQuestion, useAnswers, useQuestions } from "@/lib/api";
 import { paragraphs, plural, shortDate, signedBy, timeAgo } from "@/lib/format";
 import { ArrowRight, ArrowUpRight, Check, Copy, Feather } from "lucide-react";
 import { useState } from "react";
@@ -24,11 +25,28 @@ function DetailSkeleton() {
 }
 
 function AnswerComposer({ questionId, onSubmitted }) {
-  const user = auth.getUser();
+  const { user, isAuthenticated } = useAuth();
   const [body, setBody] = useState("");
   const [context, setContext] = useState("");
   const [anonymous, setAnonymous] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="border border-rule bg-paper-2 p-8">
+        <Kicker>Add your experience</Kicker>
+        <h3 className="mt-3 font-serif text-2xl tracking-tight text-ink">
+          What actually happened to you?
+        </h3>
+        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-2">
+          Storii is an archive of real lived experiences. Please sign in with Google to share your story on the record (you can choose to remain anonymous).
+        </p>
+        <div className="mt-6 flex flex-wrap items-center gap-4">
+          <GoogleSignIn variant="desk" />
+        </div>
+      </div>
+    );
+  }
 
   async function submit(event) {
     event.preventDefault();
@@ -38,7 +56,7 @@ function AnswerComposer({ questionId, onSubmitted }) {
         body,
         context: context.trim() || undefined,
         anonymous,
-        authorName: anonymous ? "Anonymous" : user?.name || "You",
+        authorName: anonymous ? "Anonymous" : user?.name || "Anonymous",
       });
       setBody("");
       setContext("");
@@ -112,10 +130,10 @@ function AnswerComposer({ questionId, onSubmitted }) {
 export default function QuestionDetail() {
   const { id } = useParams();
   const question = useQuestion(id);
-  const answers = useAnswers(id);
+  const { answers, refetch: refetchAnswers } = useAnswers(id);
   const categoryQuestions = useQuestions({ category: question?.category });
   const related = (categoryQuestions || [])
-    .filter((entry) => (entry.id || entry._id) !== id)
+    .filter((entry) => entry.id !== id)
     .slice(0, 3);
 
   const [copied, setCopied] = useState(false);
@@ -157,7 +175,7 @@ export default function QuestionDetail() {
     );
   }
 
-  const answerList = answers || [];
+  const answerList = answers !== undefined ? answers : (question.experiences || []);
 
   return (
     <PageShell contentClassName="py-12">
@@ -228,13 +246,13 @@ export default function QuestionDetail() {
               </p>
             </div>
 
-            {answers === undefined ? (
+            {answers === undefined && !question.experiences ? (
               <div className="animate-pulse py-10" aria-hidden="true">
                 <div className="h-3 w-2/3 bg-muted" />
               </div>
             ) : null}
 
-            {answers !== undefined && answerList.length === 0 ? (
+            {(answers !== undefined || question.experiences) && answerList.length === 0 ? (
               <EmptyNote className="mt-8" title="Nobody has answered this yet.">
                 If you've lived through it, you're the best-qualified person on
                 this page. The first answer sets the tone for the others.
@@ -248,7 +266,10 @@ export default function QuestionDetail() {
             />
 
             <div id="respond" className="mt-12 scroll-mt-28">
-              <AnswerComposer questionId={question.id || question._id} />
+              <AnswerComposer
+                questionId={question.id}
+                onSubmitted={refetchAnswers}
+              />
             </div>
           </section>
         </article>
@@ -259,12 +280,10 @@ export default function QuestionDetail() {
               More in {categoryName(question.category)}
             </h2>
             <ul className="mt-5 space-y-5">
-              {(related || []).map((entry) => {
-                const entryId = entry.id || entry._id;
-                return (
-                  <li key={entryId} style={toneStyle(entry.category)}>
-                    <Link to={`/questions/${entryId}`} className="block">
-                      <span className="storii-link block font-serif text-[17px] leading-snug text-ink decoration-[var(--tone)]">
+              {(related || []).map((entry) => (
+                <li key={entry.id} style={toneStyle(entry.category)}>
+                  <Link to={`/questions/${entry.id}`} className="block">
+                      <span className="storii-link block font-serif text-[17px] leading-snug text-ink decoration-(--tone)">
                         {entry.title}
                       </span>
                     </Link>
@@ -274,8 +293,7 @@ export default function QuestionDetail() {
                         : plural(entry.answerCount, "experience")}
                     </p>
                   </li>
-                );
-              })}
+                ))}
               {related && related.length === 0 ? (
                 <li className="text-[14px] italic text-muted-foreground">
                   Nothing else filed here yet.

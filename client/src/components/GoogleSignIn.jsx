@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { api, auth } from "@/lib/api";
+import { useEffect, useRef } from "react";
+import { api, useAuth } from "@/lib/api";
 import { initials } from "@/lib/format";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
@@ -9,7 +9,7 @@ const CLIENT_ID =
   "557775577807-lg58vh8b3riivusfhfk6jih2jqnie248.apps.googleusercontent.com";
 
 export function GoogleSignIn({ variant = "header" }) {
-  const [user, setUser] = useState(auth.getUser());
+  const { user } = useAuth();
   const buttonRef = useRef(null);
 
   useEffect(() => {
@@ -21,8 +21,7 @@ export function GoogleSignIn({ variant = "header" }) {
           client_id: CLIENT_ID,
           callback: async (response) => {
             try {
-              const res = await api.loginGoogle(response.credential);
-              setUser(res.user);
+              await api.loginGoogle(response.credential);
               toast.success("Signed in with Google.");
             } catch (err) {
               toast.error(err.message || "Sign in failed");
@@ -62,14 +61,13 @@ export function GoogleSignIn({ variant = "header" }) {
             initials(user.name)
           )}
         </div>
-        <span className="hidden max-w-[100px] truncate text-[10px] uppercase tracking-[0.16em] text-ink sm:inline">
+        <span className="hidden max-w-24 truncate text-[10px] uppercase tracking-[0.16em] text-ink sm:inline">
           {user.name?.split(" ")[0]}
         </span>
         <button
           type="button"
           onClick={async () => {
             await api.logout();
-            setUser(null);
             toast.success("Signed out.");
           }}
           className="text-ink-2 hover:text-ink transition-colors p-1"

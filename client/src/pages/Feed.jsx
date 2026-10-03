@@ -31,7 +31,7 @@ function FilterChip({ active, to, children, tone }) {
       {tone ? (
         <span
           className={cn(
-            "size-1.5 rounded-full bg-[var(--tone)]",
+            "size-1.5 rounded-full bg-(--tone)",
             active && "bg-paper",
           )}
           aria-hidden="true"
@@ -71,7 +71,7 @@ export default function Feed() {
   const feed = useQuestions({
     category: category === "all" ? undefined : category,
     q: query || undefined,
-    sort: sort === "answered" ? "answered" : "recent",
+    sort: sort,
   });
   const archive = useQuestions({});
 
@@ -92,9 +92,7 @@ export default function Feed() {
     updateParams({ q: term.trim() });
   }
 
-  const questions = (feed || []).filter((question) =>
-    sort === "open" ? question.answerCount === 0 : true,
-  );
+  const questions = feed || [];
 
   const openQuestions = (archive || [])
     .filter((question) => question.answerCount === 0)
@@ -226,7 +224,7 @@ export default function Feed() {
 
           {questions.map((question, index) => (
             <QuestionCard
-              key={question._id}
+              key={question.id}
               question={question}
               index={index}
               delay={Math.min(index, 6) * 60}
@@ -241,16 +239,16 @@ export default function Feed() {
             </h2>
             <ul className="mt-5 space-y-5">
               {openQuestions.map((question) => (
-                <li key={question._id}>
+                <li key={question.id}>
                   <Link
-                    to={`/questions/${question._id}`}
+                    to={`/questions/${question.id}`}
                     className="group block"
                     style={toneStyle(question.category)}
                   >
                     <span className="text-[8.5px] uppercase tracking-[0.2em] text-muted-foreground">
                       {categoryName(question.category)}
                     </span>
-                    <span className="storii-link mt-0.5 block font-serif text-[14.5px] leading-snug text-ink decoration-[var(--tone)]">
+                    <span className="storii-link mt-0.5 block font-serif text-[14.5px] leading-snug text-ink decoration-(--tone)">
                       {question.title}
                     </span>
                   </Link>
@@ -280,7 +278,7 @@ export default function Feed() {
                     style={toneStyle(entry.slug)}
                   >
                     <span className="flex items-center gap-2.5 text-[14px] text-ink-2 group-hover:text-ink">
-                      <span className="size-1.5 rounded-full bg-[var(--tone)]" />
+                      <span className="size-1.5 rounded-full bg-(--tone)" />
                       {entry.name}
                     </span>
                     <span className="text-[11px] tabular-nums text-muted-foreground">

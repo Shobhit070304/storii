@@ -11,14 +11,16 @@ export function PageShell({
   contentClassName,
 }) {
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col overflow-x-clip">
       <PaperBackground />
       <StoriiHeader />
       <main className={cn("flex-1", className)}>
         <div
           className={cn(
-            "mx-auto w-full px-5 sm:px-8",
-            width === "narrow" ? "max-w-3xl" : "max-w-6xl",
+            "w-full",
+            width === "narrow" && "mx-auto max-w-3xl px-5 sm:px-8",
+            width === "wide" && "mx-auto max-w-6xl px-5 sm:px-8",
+            width === "full" && "max-w-none px-0",
             contentClassName,
           )}
         >

@@ -5,12 +5,17 @@ export const UserController = {
   /**
    * GET /api/users/me/contributions
    * Fetches questions and experiences for the currently authenticated user
-   * (or demo user if guest)
    */
   async getMyContributions(req, res, next) {
     try {
-      // Use logged in user ID if available, or default to demo user "user_me"
-      const authorId = req.user ? req.user.id : "user_me";
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: "Authentication required to view contributions.",
+        });
+      }
+
+      const authorId = req.user.id;
 
       const [questions, answers] = await Promise.all([
         QuestionModel.findByAuthorId(authorId),

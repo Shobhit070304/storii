@@ -7,12 +7,11 @@ export function formatExperience(row) {
 
   return {
     id: row.id,
-    _id: row.id, // For backward compatibility with frontend
     questionId: row.question_id,
     body: row.body,
     context: row.context || "",
     authorId: row.author_id,
-    authorName: row.anonymous ? "Anonymous" : row.author_name || "Guest",
+    authorName: row.anonymous ? "Anonymous" : row.author_name || "Anonymous",
     anonymous: Boolean(row.anonymous),
     createdAt: createdAtMs,
     createdAtIso: row.created_at,
@@ -21,7 +20,6 @@ export function formatExperience(row) {
       ? {
           question: {
             id: row.question_id,
-            _id: row.question_id,
             title: row.question_title,
             category: row.question_category,
           },

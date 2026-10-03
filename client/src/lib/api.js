@@ -19,12 +19,24 @@ export const auth = {
     else localStorage.removeItem("token");
     if (user) localStorage.setItem("user", JSON.stringify(user));
     else localStorage.removeItem("user");
+    window.dispatchEvent(new Event("auth"));
   },
   clear() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    window.dispatchEvent(new Event("auth"));
   },
 };
+
+export function useAuth() {
+  const [user, setUser] = useState(auth.getUser);
+  useEffect(() => {
+    const sync = () => setUser(auth.getUser());
+    window.addEventListener("auth", sync);
+    return () => window.removeEventListener("auth", sync);
+  }, []);
+  return { user, isAuthenticated: Boolean(user) };
+}
 
 async function request(path, options = {}) {
   const token = auth.getToken();
@@ -101,7 +113,7 @@ export const api = {
   },
 };
 
-// Minimal, straightforward data-fetching hooks
+// Data-fetching hooks
 export function useQuestions(params) {
   const [questions, setQuestions] = useState();
   useEffect(() => {
@@ -127,14 +139,15 @@ export function useQuestion(id) {
 
 export function useAnswers(questionId) {
   const [answers, setAnswers] = useState();
-  useEffect(() => {
+  const refetch = () => {
     if (!questionId) return;
     api
       .getAnswers(questionId)
       .then((data) => setAnswers(Array.isArray(data) ? data : []))
       .catch(() => setAnswers([]));
-  }, [questionId]);
-  return answers;
+  };
+  useEffect(refetch, [questionId]);
+  return { answers, refetch };
 }
 
 export function useStats() {
@@ -148,13 +161,21 @@ export function useStats() {
   return stats;
 }
 
-export function useMyContributions() {
+export function useMyContributions(user) {
   const [data, setData] = useState({ questions: [], answers: [] });
+  const [loading, setLoading] = useState(Boolean(user));
   useEffect(() => {
+    if (!user) {
+      setData({ questions: [], answers: [] });
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     api
       .getContributions()
       .then((res) => res && setData(res))
-      .catch(() => {});
-  }, []);
-  return data;
+      .catch(() => setData({ questions: [], answers: [] }))
+      .finally(() => setLoading(false));
+  }, [user?.id]);
+  return { ...data, loading };
 }

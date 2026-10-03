@@ -89,107 +89,107 @@ export default function Landing() {
     : "A growing archive";
 
   return (
-    <PageShell className="overflow-x-clip">
-      {/* ── Hero: the landscape runs edge to edge, behind the words ── */}
-      <div className="relative left-1/2 w-screen -translate-x-1/2 overflow-x-clip">
-        <section className="storii-rise relative isolate flex min-h-[34rem] items-center justify-center overflow-hidden px-6 py-20 text-center sm:min-h-[42rem] sm:px-12 lg:min-h-[48rem]">
-          <PastoralHero className="absolute inset-0 -z-10 h-full w-full" />
+    <PageShell width="full">
+      {/* ── Hero: the landscape runs edge to edge naturally without w-screen overflow ── */}
+      <section className="storii-rise relative isolate flex min-h-[34rem] items-center justify-center overflow-hidden px-6 py-20 text-center sm:min-h-[42rem] lg:min-h-[48rem]">
+        <PastoralHero className="absolute inset-0 -z-10 h-full w-full" />
 
-          {/* A light print wash plus a soft bed of paper under the type, so the
-              words stay calm and readable without hiding the landscape. */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-10 bg-paper/20"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-10"
-            style={{
-              background:
-                "radial-gradient(72% 62% at 50% 46%, color-mix(in srgb, var(--paper) 70%, transparent) 0%, color-mix(in srgb, var(--paper) 42%, transparent) 48%, transparent 78%)",
-            }}
-          />
-
-          <div className="relative w-full max-w-3xl">
-            <Kicker>Lived experience, on the record</Kicker>
-
-            <h1 className="mx-auto mt-6 max-w-3xl font-serif text-[2.5rem] leading-[1.05] tracking-tight text-ink sm:text-[3.8rem]">
-              The lessons people only learn by{" "}
-              <em className="italic text-vermillion">living them.</em>
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-ink-2">
-              Ask what you wish someone had told you. The answers come from
-              people who were actually there.
-            </p>
-
-            <HeroSearch />
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Button
-                asChild
-                size="lg"
-                className="rounded-sm px-6 text-[10px] uppercase tracking-[0.22em]"
-              >
-                <Link to="/feed">
-                  Read the feed
-                  <ArrowRight className="size-3.5" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="rounded-sm border-rule-strong bg-paper/70 px-6 text-[10px] uppercase tracking-[0.22em] text-ink hover:bg-paper"
-              >
-                <Link to="/ask">Ask a question</Link>
-              </Button>
-            </div>
-
-            <p className="mt-5 text-[13px] text-ink-2">
-              Post with your name, or keep it completely anonymous.
-            </p>
-          </div>
-        </section>
-
-        <p className="mx-auto mt-3 flex w-full max-w-6xl flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-5 text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:px-8">
-          <span>First light on the coast</span>
-          <span className="normal-case tracking-[0.08em]">{statLine}</span>
-        </p>
-      </div>
-
-      {/* ── Recently answered ──────────────────────────────── */}
-      <section className="mt-24">
-        <Heading
-          kicker="Recently answered"
-          title="Questions people just answered"
-          action={
-            <Link
-              to="/feed"
-              className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-ink-2 hover:text-ink"
-            >
-              See every question
-              <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          }
+        {/* A light print wash plus a soft bed of paper under the type, so the
+            words stay calm and readable without hiding the landscape. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-paper/20"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(72% 62% at 50% 46%, color-mix(in srgb, var(--paper) 70%, transparent) 0%, color-mix(in srgb, var(--paper) 42%, transparent) 48%, transparent 78%)",
+          }}
         />
 
-        <div>
-          {featured.map((question, index) => (
-            <QuestionCard
-              key={question._id}
-              question={question}
-              index={index}
-              delay={index * 70}
-            />
-          ))}
-          {feed && feed.length === 0 ? (
-            <p className="py-12 text-center text-[15px] italic text-muted-foreground">
-              Nothing here yet. Ask the first question.
-            </p>
-          ) : null}
+        <div className="relative w-full max-w-3xl">
+          <Kicker>Lived experience, on the record</Kicker>
+
+          <h1 className="mx-auto mt-6 max-w-3xl font-serif text-[2.5rem] leading-[1.05] tracking-tight text-ink sm:text-[3.8rem]">
+            The lessons people only learn by{" "}
+            <em className="italic text-vermillion">living them.</em>
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-ink-2">
+            Ask what you wish someone had told you. The answers come from
+            people who were actually there.
+          </p>
+
+          <HeroSearch />
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button
+              asChild
+              size="lg"
+              className="rounded-sm px-6 text-[10px] uppercase tracking-[0.22em]"
+            >
+              <Link to="/feed">
+                Read the feed
+                <ArrowRight className="size-3.5" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="rounded-sm border-rule-strong bg-paper/70 px-6 text-[10px] uppercase tracking-[0.22em] text-ink hover:bg-paper"
+            >
+              <Link to="/ask">Ask a question</Link>
+            </Button>
+          </div>
+
+          <p className="mt-5 text-[13px] text-ink-2">
+            Post with your name, or keep it completely anonymous.
+          </p>
         </div>
       </section>
+
+      <p className="mx-auto mt-3 flex w-full max-w-6xl flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-5 text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:px-8">
+        <span>First light on the coast</span>
+        <span className="normal-case tracking-[0.08em]">{statLine}</span>
+      </p>
+
+      {/* ── Bounded Editorial Content Container ────────────── */}
+      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 pb-16">
+        {/* ── Recently answered ──────────────────────────────── */}
+        <section className="mt-24">
+          <Heading
+            kicker="Recently answered"
+            title="Questions people just answered"
+            action={
+              <Link
+                to="/feed"
+                className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-ink-2 hover:text-ink"
+              >
+                See every question
+                <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            }
+          />
+
+          <div>
+            {featured.map((question, index) => (
+              <QuestionCard
+                key={question.id}
+                question={question}
+                index={index}
+                delay={index * 70}
+              />
+            ))}
+            {feed && feed.length === 0 ? (
+              <p className="py-12 text-center text-[15px] italic text-muted-foreground">
+                Nothing here yet. Ask the first question.
+              </p>
+            ) : null}
+          </div>
+        </section>
 
       {/* ── Categories ─────────────────────────────────────── */}
       <section className="mt-24">
@@ -218,7 +218,7 @@ export default function Landing() {
               <span className="flex items-baseline gap-3">
                 <span
                   aria-hidden="true"
-                  className="size-1.5 shrink-0 rounded-full bg-[var(--tone)]"
+                  className="size-1.5 shrink-0 rounded-full bg-(--tone)"
                 />
                 <span className="font-serif text-[1.15rem] text-ink">
                   {category.name}
@@ -292,6 +292,7 @@ export default function Landing() {
           You can post your question or your experience anonymously.
         </p>
       </section>
+      </div>
     </PageShell>
   );
 }

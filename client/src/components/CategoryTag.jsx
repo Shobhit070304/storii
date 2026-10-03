@@ -8,10 +8,10 @@ export function CategoryTag({ slug, asLink = true, className }) {
   const content = (
     <>
       <span
-        className="size-1.5 shrink-0 rounded-full bg-[var(--tone)] transition-transform duration-300 group-hover/tag:scale-150"
+        className="size-1.5 shrink-0 rounded-full bg-(--tone) transition-transform duration-300 group-hover/tag:scale-150"
         aria-hidden="true"
       />
-      <span className="transition-colors duration-300 group-hover/tag:text-[var(--tone)]">
+      <span className="transition-colors duration-300 group-hover/tag:text-(--tone)">
         {label}
       </span>
     </>

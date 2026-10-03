@@ -79,15 +79,16 @@ export const QuestionController = {
         });
       }
 
-      const isAnonymous = Boolean(anonymous);
-      const authorId = req.user ? req.user.id : null;
-      let authorName = "Guest reader";
-
-      if (req.user) {
-        authorName = req.user.name;
-      } else if (req.body.authorName && req.body.authorName.trim()) {
-        authorName = req.body.authorName.trim();
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: "Please sign in to ask a question.",
+        });
       }
+
+      const isAnonymous = Boolean(anonymous);
+      const authorId = req.user.id;
+      const authorName = req.user.name || "Anonymous";
 
       const question = await QuestionModel.create({
         title,

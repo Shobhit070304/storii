@@ -104,7 +104,7 @@ The frontend runs at `http://localhost:5173` with automatic API proxying to `htt
 2. Clicking **Sign In** sends Google's secure ID token credential to `POST /api/auth/google`.
 3. The backend verifies the ID token using `google-auth-library`, upserts the user in PostgreSQL, and generates a session JWT.
 4. Subsequent requests pass `Authorization: Bearer <token>` to access protected features (or personalize contributions in "Your Desk").
-5. Users can also contribute questions or experiences **anonymously** or as a guest.
+5. Authenticated users can choose to contribute questions or experiences with their name or **anonymously**.
 
 ---
 
@@ -121,16 +121,16 @@ The frontend runs at `http://localhost:5173` with automatic API proxying to `htt
   - `q` — Keyword search across question title and body.
   - `sort` — `recent` (default), `answered` (most answers first), or `open` (unanswered questions).
 - `GET /api/questions/:id` — Get question details along with all submitted experiences.
-- `POST /api/questions` — Ask a question. Body: `{ title, body, category, anonymous }`.
+- `POST /api/questions` — Ask a question (requires authentication). Body: `{ title, body, category, anonymous }`.
 - `DELETE /api/questions/:id` — Delete question (requires author authentication).
 
 ### Experiences (`/api/questions/:questionId/experiences` & `/api/experiences`)
 - `GET /api/questions/:questionId/experiences` — Retrieve all answers for a question.
-- `POST /api/questions/:questionId/experiences` — Submit an experience. Body: `{ body, context, anonymous }`.
+- `POST /api/questions/:questionId/experiences` — Submit an experience (requires authentication). Body: `{ body, context, anonymous }`.
 - `DELETE /api/experiences/:id` — Remove an experience (requires author authentication).
 
 ### Contributions & Metrics
-- `GET /api/users/me/contributions` — Fetch questions and experiences submitted by the user (or demo account).
+- `GET /api/users/me/contributions` — Fetch questions and experiences submitted by the authenticated user (requires authentication).
 - `GET /api/stats` — Total questions, experiences, and distinct contributors.
 - `GET /api/health` — Health check endpoint.
 

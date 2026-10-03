@@ -8,11 +8,11 @@ const router = Router();
 // Question endpoints
 router.get("/", QuestionController.getQuestions);
 router.get("/:id", QuestionController.getQuestionById);
-router.post("/", optionalAuth, QuestionController.createQuestion);
+router.post("/", requireAuth, QuestionController.createQuestion);
 router.delete("/:id", requireAuth, QuestionController.deleteQuestion);
 
 // Nested experiences endpoints for convenience (/api/questions/:questionId/experiences)
 router.get("/:questionId/experiences", ExperienceController.getExperiences);
-router.post("/:questionId/experiences", optionalAuth, ExperienceController.createExperience);
+router.post("/:questionId/experiences", requireAuth, ExperienceController.createExperience);
 
 export default router;

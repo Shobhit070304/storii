@@ -88,5 +88,5 @@ export function paragraphs(text) {
 export function signedBy(entry) {
   if (!entry) return "Anonymous";
   if (entry.anonymous) return "Anonymous";
-  return entry.authorName || "Guest reader";
+  return entry.authorName || "Anonymous";
 }

@@ -2,7 +2,7 @@ import { EmptyNote } from "@/components/EmptyNote";
 import { Kicker, PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { categoryName, toneStyle } from "@/lib/categories";
-import { auth, useMyContributions } from "@/lib/api";
+import { useAuth, useMyContributions } from "@/lib/api";
 import { GoogleSignIn } from "@/components/GoogleSignIn";
 import { plural, timeAgo } from "@/lib/format";
 import { ArrowUpRight, Feather } from "lucide-react";
@@ -21,9 +21,9 @@ function Stat({ label, value, note }) {
 }
 
 export default function Contributions() {
-  const user = auth.getUser();
-  const isAuthenticated = Boolean(user);
-  const { questions, answers } = useMyContributions();
+  const { user, isAuthenticated } = useAuth();
+  const { questions, answers, loading } = useMyContributions(user);
+
   const experiencesGiven = answers.reduce((total) => total + 1, 0);
   const experiencesReceived = questions.reduce(
     (total, question) => total + (question.answerCount || 0),
@@ -34,7 +34,7 @@ export default function Contributions() {
     <PageShell contentClassName="py-14">
       <header className="storii-blanket flex flex-wrap items-end justify-between gap-6 pb-8">
         <div>
-          <Kicker>{isAuthenticated ? `Your desk · ${user.name}` : "Your desk"}</Kicker>
+          <Kicker>{isAuthenticated ? `Your desk · ${user?.name || user?.email || "Author"}` : "Your desk"}</Kicker>
           <h1 className="mt-3 font-serif text-[2.4rem] leading-[1.1] tracking-tight text-ink sm:text-[3rem]">
             Your contributions
           </h1>
@@ -44,7 +44,6 @@ export default function Contributions() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          {!isAuthenticated ? <GoogleSignIn variant="desk" /> : null}
           <Button
             asChild
             variant="outline"
@@ -58,151 +57,162 @@ export default function Contributions() {
         </div>
       </header>
 
-      <div className="mt-10 grid gap-px border border-rule bg-rule sm:grid-cols-3">
-        <Stat
-          label="Questions asked"
-          value={questions.length}
-          note="Each one waiting on somebody's experience."
-        />
-        <Stat
-          label="Experiences shared"
-          value={experiencesGiven}
-          note="Answers you've written from your own life."
-        />
-        <Stat
-          label="Experiences received"
-          value={experiencesReceived}
-          note="How many times others answered you."
-        />
-      </div>
-
-      <div className="mt-14 grid gap-14 lg:grid-cols-2">
-        <section>
-          <div className="flex items-baseline justify-between border-b border-rule-strong pb-3">
-            <h2 className="font-serif text-2xl tracking-tight text-ink">
-              Questions you asked
-            </h2>
-            <Link
-              to="/ask"
-              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-ink-2 hover:text-ink"
-            >
-              Ask another
-              <ArrowUpRight className="size-3" />
-            </Link>
+      {!isAuthenticated ? (
+        <div className="mt-10 border border-rule bg-paper-2 p-10 text-center sm:p-14">
+          <Kicker>Welcome</Kicker>
+          <h2 className="mt-3 font-serif text-2xl tracking-tight text-ink sm:text-3xl">
+            Your desk is waiting
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-ink-2">
+            Sign in with Google to view the questions you have asked, the experiences you have shared, and the answers others have written for you.
+          </p>
+          <div className="mt-8 flex justify-center">
+            <GoogleSignIn variant="desk" />
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="mt-10 grid gap-px border border-rule bg-rule sm:grid-cols-3">
+            <Stat
+              label="Questions asked"
+              value={questions.length}
+              note="Each one waiting on somebody's experience."
+            />
+            <Stat
+              label="Experiences shared"
+              value={experiencesGiven}
+              note="Answers you've written from your own life."
+            />
+            <Stat
+              label="Experiences received"
+              value={experiencesReceived}
+              note="How many times others answered you."
+            />
           </div>
 
-          <ul className="mt-6 space-y-6">
-            {questions.map((question) => {
-              const qId = question.id || question._id;
-              return (
-                <li
-                  key={qId}
-                  className="border-b border-rule pb-6"
-                  style={toneStyle(question.category)}
+          <div className="mt-14 grid gap-14 lg:grid-cols-2">
+            <section>
+              <div className="flex items-baseline justify-between border-b border-rule-strong pb-3">
+                <h2 className="font-serif text-2xl tracking-tight text-ink">
+                  Questions you asked
+                </h2>
+                <Link
+                  to="/ask"
+                  className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-ink-2 hover:text-ink"
                 >
-                  <div className="flex items-center gap-3 text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
-                    <span className="size-1.5 rounded-full bg-[var(--tone)]" />
-                    <span>{categoryName(question.category)}</span>
-                    <span>{timeAgo(question.createdAt)}</span>
-                  </div>
-                  <Link
-                    to={`/questions/${qId}`}
-                    className="storii-link mt-2 block font-serif text-[19px] leading-snug text-ink decoration-[var(--tone)]"
+                  Ask another
+                  <ArrowUpRight className="size-3" />
+                </Link>
+              </div>
+
+              <ul className="mt-6 space-y-6">
+                {questions.map((question) => (
+                  <li
+                    key={question.id}
+                    className="border-b border-rule pb-6"
+                    style={toneStyle(question.category)}
                   >
-                    {question.title}
-                  </Link>
-                  <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                    {question.answerCount === 0
-                      ? "No experiences yet"
-                      : plural(question.answerCount, "experience")}
-                    {question.anonymous ? " · anonymous" : ""}
-                  </p>
-                </li>
-              );
-            })}
-          </ul>
+                    <div className="flex items-center gap-3 text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+                      <span className="size-1.5 rounded-full bg-(--tone)" />
+                      <span>{categoryName(question.category)}</span>
+                      <span>{timeAgo(question.createdAt)}</span>
+                    </div>
+                    <Link
+                      to={`/questions/${question.id}`}
+                      className="storii-link mt-2 block font-serif text-[19px] leading-snug text-ink decoration-(--tone)"
+                    >
+                        {question.title}
+                      </Link>
+                      <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                        {question.answerCount === 0
+                          ? "No experiences yet"
+                          : plural(question.answerCount, "experience")}
+                        {question.anonymous ? " · anonymous" : ""}
+                      </p>
+                    </li>
+                ))}
+              </ul>
 
-          {questions.length === 0 ? (
-            <EmptyNote
-              className="mt-6"
-              title="You haven't asked anything yet."
-              action={
-                <Button
-                  asChild
-                  className="rounded-sm px-5 text-[10px] uppercase tracking-[0.22em]"
+              {!loading && questions.length === 0 ? (
+                <EmptyNote
+                  className="mt-6"
+                  title="You haven't asked anything yet."
+                  action={
+                    <Button
+                      asChild
+                      className="rounded-sm px-5 text-[10px] uppercase tracking-[0.22em]"
+                    >
+                      <Link to="/ask">Ask your first question</Link>
+                    </Button>
+                  }
                 >
-                  <Link to="/ask">Ask your first question</Link>
-                </Button>
-              }
-            >
-              The question you're carrying around is probably useful to more
-              people than you think.
-            </EmptyNote>
-          ) : null}
-        </section>
+                  The question you're carrying around is probably useful to more
+                  people than you think.
+                </EmptyNote>
+              ) : null}
+            </section>
 
-        <section>
-          <div className="flex items-baseline justify-between border-b border-rule-strong pb-3">
-            <h2 className="font-serif text-2xl tracking-tight text-ink">
-              Experiences you shared
-            </h2>
-            <Link
-              to="/feed?sort=open"
-              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-ink-2 hover:text-ink"
-            >
-              Open questions
-              <ArrowUpRight className="size-3" />
-            </Link>
+            <section>
+              <div className="flex items-baseline justify-between border-b border-rule-strong pb-3">
+                <h2 className="font-serif text-2xl tracking-tight text-ink">
+                  Experiences you shared
+                </h2>
+                <Link
+                  to="/feed?sort=open"
+                  className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-ink-2 hover:text-ink"
+                >
+                  Open questions
+                  <ArrowUpRight className="size-3" />
+                </Link>
+              </div>
+
+              <ul className="mt-6 space-y-6">
+                {answers.map((answer) => (
+                  <li
+                    key={answer.id}
+                    className="border-b border-rule pb-6"
+                    style={toneStyle(answer.question?.category)}
+                  >
+                      <Link
+                        to={`/questions/${answer.questionId}`}
+                        className="storii-link block font-serif text-[19px] leading-snug text-ink decoration-(--tone)"
+                      >
+                        {answer.question
+                          ? answer.question.title
+                          : "A question that has since been removed"}
+                      </Link>
+                      <p className="mt-3 line-clamp-3 border-l-2 border-(--tone) pl-4 text-[14px] italic leading-relaxed text-ink-2">
+                        {answer.body}
+                      </p>
+                      <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                        Shared {timeAgo(answer.createdAt)}
+                        {answer.anonymous ? " · anonymous" : ""}
+                      </p>
+                    </li>
+                ))}
+              </ul>
+
+              {!loading && answers.length === 0 ? (
+                <EmptyNote
+                  className="mt-6"
+                  title="No experiences shared yet."
+                  action={
+                    <Button
+                      asChild
+                      className="rounded-sm px-5 text-[10px] uppercase tracking-[0.22em]"
+                    >
+                      <Link to="/feed?sort=open">Find an open question</Link>
+                    </Button>
+                  }
+                >
+                  Somebody is stuck on something you've already been through. It
+                  takes about a minute to help.
+                </EmptyNote>
+              ) : null}
+            </section>
           </div>
-
-          <ul className="mt-6 space-y-6">
-            {answers.map((answer) => {
-              const aId = answer.id || answer._id;
-              return (
-                <li
-                  key={aId}
-                  className="border-b border-rule pb-6"
-                  style={toneStyle(answer.question?.category)}
-                >
-                  <Link
-                    to={`/questions/${answer.questionId}`}
-                    className="storii-link block font-serif text-[19px] leading-snug text-ink decoration-[var(--tone)]"
-                  >
-                    {answer.question
-                      ? answer.question.title
-                      : "A question that has since been removed"}
-                  </Link>
-                  <p className="mt-3 line-clamp-3 border-l-2 border-[var(--tone)] pl-4 text-[14px] italic leading-relaxed text-ink-2">
-                    {answer.body}
-                  </p>
-                  <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Shared {timeAgo(answer.createdAt)}
-                    {answer.anonymous ? " · anonymous" : ""}
-                  </p>
-                </li>
-              );
-            })}
-          </ul>
-
-          {answers.length === 0 ? (
-            <EmptyNote
-              className="mt-6"
-              title="No experiences shared yet."
-              action={
-                <Button
-                  asChild
-                  className="rounded-sm px-5 text-[10px] uppercase tracking-[0.22em]"
-                >
-                  <Link to="/feed?sort=open">Find an open question</Link>
-                </Button>
-              }
-            >
-              Somebody is stuck on something you've already been through. It
-              takes about a minute to help.
-            </EmptyNote>
-          ) : null}
-        </section>
-      </div>
+        </>
+      )}
     </PageShell>
   );
 }

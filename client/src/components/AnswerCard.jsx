@@ -41,7 +41,7 @@ export function AnswerCard({ answer, category, index = 0 }) {
       </header>
 
       {answer.context ? (
-        <p className="mt-6 border-l-2 pl-4 text-[13px] italic leading-relaxed text-ink-2 border-[var(--tone)]">
+        <p className="mt-6 border-l-2 pl-4 text-[13px] italic leading-relaxed text-ink-2 border-(--tone)">
           {answer.context}
         </p>
       ) : null}
@@ -62,7 +62,7 @@ export function AnswersList({ answers, category, className }) {
     <div className={cn("space-y-8", className)}>
       {answers.map((answer, index) => (
         <AnswerCard
-          key={answer._id}
+          key={answer.id}
           answer={answer}
           category={category}
           index={index}

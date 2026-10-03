@@ -1,8 +1,9 @@
 import { IdentityChoice } from "@/components/IdentityChoice";
+import { GoogleSignIn } from "@/components/GoogleSignIn";
 import { Kicker, PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES, toneStyle } from "@/lib/categories";
-import { api, auth } from "@/lib/api";
+import { api, useAuth } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
@@ -13,7 +14,7 @@ const MAX_TITLE = 160;
 
 export default function AskQuestion() {
   const navigate = useNavigate();
-  const user = auth.getUser();
+  const { user, isAuthenticated } = useAuth();
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -26,6 +27,10 @@ export default function AskQuestion() {
 
   async function submit(event) {
     event.preventDefault();
+    if (!isAuthenticated) {
+      toast.error("Please sign in to ask a question.");
+      return;
+    }
     setSaving(true);
     try {
       const res = await api.createQuestion({
@@ -33,10 +38,10 @@ export default function AskQuestion() {
         body: body.trim() || undefined,
         category,
         anonymous,
-        authorName: anonymous ? "Anonymous" : user?.name || "You",
+        authorName: anonymous ? "Anonymous" : user?.name || "Anonymous",
       });
       toast.success("Your question is on the record.");
-      navigate(`/questions/${res.id || res._id || res}`);
+      navigate(`/questions/${res.id}`);
     } catch (error) {
       toast.error(error?.message || "That didn't save. Try again?");
       setSaving(false);
@@ -57,7 +62,21 @@ export default function AskQuestion() {
       </header>
 
       <div className="mt-12 grid gap-14 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <form onSubmit={submit} className="space-y-12">
+        {!isAuthenticated ? (
+          <div className="border border-rule bg-paper-2 p-8 sm:p-10">
+            <Kicker>Authentication required</Kicker>
+            <h2 className="mt-3 font-serif text-2xl tracking-tight text-ink">
+              Sign in to put your question on the record
+            </h2>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-2">
+              Storii keeps an honest, high-trust archive of lived experience. Sign in with Google to post your question. You can choose to display your name or submit anonymously under your account.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <GoogleSignIn variant="desk" />
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={submit} className="space-y-12">
           <div>
             <label
               htmlFor="title"
@@ -100,7 +119,7 @@ export default function AskQuestion() {
                   >
                     <span
                       className={cn(
-                        "size-1.5 shrink-0 rounded-full bg-[var(--tone)] transition-transform",
+                        "size-1.5 shrink-0 rounded-full bg-(--tone) transition-transform",
                         active ? "scale-150" : "opacity-50",
                       )}
                       aria-hidden="true"
@@ -135,7 +154,7 @@ export default function AskQuestion() {
             <IdentityChoice
               value={anonymous}
               onChange={setAnonymous}
-              name={user?.name || "You"}
+              name={user?.name || "With my name"}
             />
             <Button
               type="submit"
@@ -148,6 +167,7 @@ export default function AskQuestion() {
             </Button>
           </div>
         </form>
+        )}
 
         <aside>
           <h2 className="border-b border-rule-strong pb-3 text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
@@ -165,7 +185,7 @@ export default function AskQuestion() {
                     setTitle(entry.prompt);
                     setCategory(entry.slug);
                   }}
-                  className="storii-link text-left font-serif text-[16px] leading-snug text-ink decoration-[var(--tone)]"
+                  className="storii-link text-left font-serif text-[16px] leading-snug text-ink decoration-(--tone)"
                 >
                   {entry.prompt}
                 </button>

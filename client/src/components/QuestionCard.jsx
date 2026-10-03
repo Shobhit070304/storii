@@ -10,7 +10,7 @@ import { Link } from "react-router";
 export function QuestionCard({ question, index, className, delay = 0 }) {
   if (!question) return null;
   const isOpen = question.answerCount === 0;
-  const questionId = question.id || question._id;
+  const questionId = question.id;
 
   return (
     <article
@@ -40,7 +40,7 @@ export function QuestionCard({ question, index, className, delay = 0 }) {
         <h3 className="mt-1.5 font-serif text-[1.15rem] sm:text-[1.25rem] leading-snug tracking-tight text-ink">
           <Link
             to={`/questions/${questionId}`}
-            className="storii-link decoration-[var(--tone)] focus-visible:outline-none"
+            className="storii-link decoration-(--tone) focus-visible:outline-none"
           >
             {question.title}
           </Link>
@@ -53,13 +53,13 @@ export function QuestionCard({ question, index, className, delay = 0 }) {
         ) : null}
 
         <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="normal-case tracking-[0.05em] text-ink-2">
+          <span className="normal-case tracking-wider text-ink-2">
             {question.anonymous
               ? "Asked anonymously"
               : `Asked by ${signedBy(question)}`}
           </span>
           <span className="hidden h-px w-4 bg-rule sm:block" aria-hidden="true" />
-          <span className={cn(isOpen && "text-[var(--tone)] font-medium")}>
+          <span className={cn(isOpen && "text-(--tone) font-medium")}>
             {isOpen
               ? "No experiences yet"
               : plural(question.answerCount, "experience")}

@@ -44,15 +44,16 @@ export const ExperienceController = {
         });
       }
 
-      const isAnonymous = Boolean(anonymous);
-      const authorId = req.user ? req.user.id : null;
-      let authorName = "Guest reader";
-
-      if (req.user) {
-        authorName = req.user.name;
-      } else if (req.body.authorName && req.body.authorName.trim()) {
-        authorName = req.body.authorName.trim();
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: "Please sign in to share an experience.",
+        });
       }
+
+      const isAnonymous = Boolean(anonymous);
+      const authorId = req.user.id;
+      const authorName = req.user.name || "Anonymous";
 
       const experience = await ExperienceModel.create({
         questionId,

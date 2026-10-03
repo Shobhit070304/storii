@@ -6,12 +6,11 @@ export function formatQuestion(row) {
 
   return {
     id: row.id,
-    _id: row.id, // For backward compatibility with frontend
     title: row.title,
     body: row.body || "",
     category: row.category,
     authorId: row.author_id,
-    authorName: row.anonymous ? "Anonymous" : row.author_name || "Guest",
+    authorName: row.anonymous ? "Anonymous" : row.author_name || "Anonymous",
     anonymous: Boolean(row.anonymous),
     answerCount: parseInt(row.answer_count || 0, 10),
     createdAt: createdAtMs,
