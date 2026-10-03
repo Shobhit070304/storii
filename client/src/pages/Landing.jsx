@@ -91,7 +91,7 @@ export default function Landing() {
   return (
     <PageShell width="full">
       {/* ── Hero: the landscape runs edge to edge naturally without w-screen overflow ── */}
-      <section className="storii-rise relative isolate flex min-h-[34rem] items-center justify-center overflow-hidden px-6 py-20 text-center sm:min-h-[42rem] lg:min-h-[48rem]">
+      <section className="storii-rise relative isolate flex min-h-136 items-center justify-center overflow-hidden px-6 py-20 text-center sm:min-h-168 lg:min-h-192">
         <PastoralHero className="absolute inset-0 -z-10 h-full w-full" />
 
         {/* A light print wash plus a soft bed of paper under the type, so the
