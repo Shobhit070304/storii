@@ -1,11 +1,13 @@
 import { CategoryTag } from "@/components/CategoryTag";
-import { plural, shortDate, signedBy, timeAgo } from "@/lib/format";
+import { plural, signedBy, timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { toneStyle } from "@/lib/categories";
 import { Link } from "react-router";
+import { MessageSquare } from "lucide-react";
 
 /**
- * One question in the feed: a sleek, refined editorial entry.
+ * One question in the feed — social card style.
+ * Bold title, clean meta, category accent, answer count badge.
  */
 export function QuestionCard({ question, index, className, delay = 0 }) {
   if (!question) return null;
@@ -14,62 +16,49 @@ export function QuestionCard({ question, index, className, delay = 0 }) {
 
   return (
     <article
-      className={cn(
-        "storii-rise group relative grid grid-cols-1 gap-x-5 border-b border-rule/70 py-4 sm:py-5 sm:grid-cols-[2rem_minmax(0,1fr)] transition-colors hover:bg-paper-2/40 px-2 rounded-sm",
-        className,
-      )}
+      className={cn("storii-rise storii-card group block", className)}
       style={{ ...toneStyle(question.category), animationDelay: `${delay}ms` }}
     >
-      <span
-        aria-hidden="true"
-        className="hidden pt-0.5 text-[10.5px] tabular-nums tracking-[0.18em] text-muted-foreground/80 sm:block"
-      >
-        {typeof index === "number"
-          ? String(index + 1).padStart(2, "0")
-          : "—"}
-      </span>
-
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <CategoryTag slug={question.category} className="text-[9px]" />
-          <span className="text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground/75">
+      <Link to={`/questions/${questionId}`} className="block p-5 sm:p-6 focus-visible:outline-none">
+        {/* Category + time */}
+        <div className="flex items-center justify-between gap-3">
+          <CategoryTag slug={question.category} asLink={false} className="text-[10px]" />
+          <span className="text-[11px] text-muted-foreground shrink-0">
             {timeAgo(question.createdAt)}
           </span>
         </div>
 
-        <h3 className="mt-1.5 font-serif text-[1.15rem] sm:text-[1.25rem] leading-snug tracking-tight text-ink">
-          <Link
-            to={`/questions/${questionId}`}
-            className="storii-link decoration-(--tone) focus-visible:outline-none"
-          >
-            {question.title}
-          </Link>
+        {/* Title */}
+        <h3 className="mt-3 font-serif text-[1.15rem] sm:text-[1.25rem] leading-snug tracking-tight text-ink group-hover:text-ink/80 transition-colors">
+          {question.title}
         </h3>
 
+        {/* Body excerpt */}
         {question.body ? (
-          <p className="mt-1.5 line-clamp-2 max-w-2xl text-[13px] leading-relaxed text-ink-2/85">
+          <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-ink-2">
             {question.body}
           </p>
         ) : null}
 
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="normal-case tracking-wider text-ink-2">
-            {question.anonymous
-              ? "Asked anonymously"
-              : `Asked by ${signedBy(question)}`}
+        {/* Meta footer */}
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <span className="text-[12px] text-muted-foreground">
+            {question.anonymous ? "Asked anonymously" : `By ${signedBy(question)}`}
           </span>
-          <span className="hidden h-px w-4 bg-rule sm:block" aria-hidden="true" />
-          <span className={cn(isOpen && "text-(--tone) font-medium")}>
-            {isOpen
-              ? "No experiences yet"
-              : plural(question.answerCount, "experience")}
-          </span>
-          <span className="hidden h-px w-4 bg-rule lg:block" aria-hidden="true" />
-          <span className="hidden lg:inline text-muted-foreground/70">
-            {shortDate(question.createdAt)}
+
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium",
+              isOpen
+                ? "bg-vermillion/10 text-vermillion"
+                : "bg-muted text-muted-foreground"
+            )}
+          >
+            <MessageSquare className="size-3" />
+            {isOpen ? "No answers yet" : plural(question.answerCount, "answer")}
           </span>
         </div>
-      </div>
+      </Link>
     </article>
   );
 }

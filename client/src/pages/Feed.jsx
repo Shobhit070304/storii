@@ -1,5 +1,5 @@
 import { EmptyNote } from "@/components/EmptyNote";
-import { Kicker, PageShell } from "@/components/PageShell";
+import { PageShell } from "@/components/PageShell";
 import { QuestionCard } from "@/components/QuestionCard";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES, categoryName, toneStyle } from "@/lib/categories";
@@ -13,30 +13,20 @@ import { Link, useSearchParams } from "react-router";
 const SORTS = [
   { value: "recent", label: "Newest" },
   { value: "answered", label: "Most answered" },
-  { value: "open", label: "Open" },
+  { value: "open", label: "Unanswered" },
 ];
 
-function FilterChip({ active, to, children, tone }) {
+function FilterPill({ active, to, children }) {
   return (
     <Link
       to={to}
-      style={tone ? toneStyle(tone) : undefined}
       className={cn(
-        "inline-flex items-center gap-1.5 border px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] transition-colors duration-200",
+        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium transition-colors duration-150",
         active
           ? "border-ink bg-ink text-paper"
-          : "border-rule text-ink-2 hover:border-rule-strong hover:text-ink",
+          : "border-rule bg-surface text-ink-2 hover:border-rule-strong hover:text-ink"
       )}
     >
-      {tone ? (
-        <span
-          className={cn(
-            "size-1.5 rounded-full bg-(--tone)",
-            active && "bg-paper",
-          )}
-          aria-hidden="true"
-        />
-      ) : null}
       {children}
     </Link>
   );
@@ -44,12 +34,21 @@ function FilterChip({ active, to, children, tone }) {
 
 function FeedSkeleton() {
   return (
-    <div className="animate-pulse space-y-6 py-10" aria-hidden="true">
-      {[0, 1, 2, 3].map((row) => (
-        <div key={row} className="space-y-3 border-b border-rule pb-8">
-          <div className="h-2 w-24 bg-muted" />
-          <div className="h-5 w-3/4 bg-muted" />
-          <div className="h-3 w-1/2 bg-muted" />
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
+      {[0, 1, 2, 3, 4, 5].map((row) => (
+        <div
+          key={row}
+          className="animate-pulse rounded-xl border border-rule bg-surface p-5"
+          style={{ animationDelay: `${row * 80}ms` }}
+        >
+          <div className="h-2.5 w-24 rounded bg-muted" />
+          <div className="mt-4 h-5 w-3/4 rounded bg-muted" />
+          <div className="mt-2 h-3 w-2/3 rounded bg-muted" />
+          <div className="mt-2 h-3 w-1/2 rounded bg-muted" />
+          <div className="mt-5 flex items-center justify-between">
+            <div className="h-2.5 w-28 rounded bg-muted" />
+            <div className="h-5 w-20 rounded-full bg-muted" />
+          </div>
         </div>
       ))}
     </div>
@@ -63,7 +62,6 @@ export default function Feed() {
   const query = searchParams.get("q") || "";
   const [term, setTerm] = useState(query);
 
-  // Keep the input in step when the URL changes from elsewhere (header, footer).
   useEffect(() => {
     setTerm(query);
   }, [query]);
@@ -71,7 +69,7 @@ export default function Feed() {
   const feed = useQuestions({
     category: category === "all" ? undefined : category,
     q: query || undefined,
-    sort: sort,
+    sort,
   });
   const archive = useQuestions({});
 
@@ -93,82 +91,80 @@ export default function Feed() {
   }
 
   const questions = feed || [];
-
-  const openQuestions = (archive || [])
-    .filter((question) => question.answerCount === 0)
-    .slice(0, 4);
-
-  const counts = (archive || []).reduce((map, question) => {
-    map[question.category] = (map[question.category] || 0) + 1;
+  const openQuestions = (archive || []).filter((q) => q.answerCount === 0).slice(0, 5);
+  const counts = (archive || []).reduce((map, q) => {
+    map[q.category] = (map[q.category] || 0) + 1;
     return map;
   }, {});
-
   const hasFilters = category !== "all" || Boolean(query) || sort !== "recent";
 
   return (
     <PageShell contentClassName="py-8 sm:py-10">
-      <header className="storii-blanket pb-6">
-        <Kicker>The feed</Kicker>
-        <h1 className="mt-2.5 max-w-2xl font-serif text-[1.75rem] leading-[1.18] tracking-tight text-ink sm:text-[2.2rem]">
-          Questions people are sitting with right now
+      {/* ── Page header ── */}
+      <header className="border-b border-rule pb-7">
+        <h1 className="font-serif text-[2rem] font-normal leading-tight tracking-tight text-ink sm:text-[2.5rem]">
+          {category !== "all"
+            ? categoryName(category)
+            : "Stories from people who were there"}
         </h1>
         <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-ink-2">
-          Read what others lived through, or add the part only you can tell.
+          {category !== "all"
+            ? `First-hand accounts in ${categoryName(category)}.`
+            : "Real experiences, asked plainly and answered honestly."}
         </p>
 
-        <form onSubmit={submitSearch} className="mt-6 flex max-w-xl items-center gap-2.5">
+        {/* Search */}
+        <form onSubmit={submitSearch} className="mt-5 flex max-w-lg items-center gap-2">
           <label className="relative flex flex-1 items-center">
-            <Search className="pointer-events-none absolute left-0 size-3.5 text-muted-foreground" />
+            <Search className="pointer-events-none absolute left-3 size-3.5 text-muted-foreground" />
             <input
               value={term}
-              onChange={(event) => setTerm(event.target.value)}
+              onChange={(e) => setTerm(e.target.value)}
               placeholder="Search questions…"
               aria-label="Search questions"
-              className="h-9 w-full border-b border-rule-strong bg-transparent pl-5 text-[13.5px] text-ink placeholder:italic placeholder:text-muted-foreground focus:border-ink focus:outline-none"
+              className="h-9 w-full rounded-full border border-rule bg-surface pl-9 pr-3 text-[13px] text-ink placeholder:text-muted-foreground focus:border-ink focus:outline-none focus:ring-1 focus:ring-rule-strong"
             />
           </label>
           <Button
             type="submit"
             variant="outline"
-            className="h-9 rounded-sm border-rule bg-transparent px-4 text-[9.5px] uppercase tracking-[0.2em] text-ink hover:bg-accent"
+            size="sm"
+            className="rounded-full border-rule bg-transparent px-4 text-[12px] text-ink hover:bg-accent"
           >
             Search
           </Button>
         </form>
 
-        <div className="mt-6 flex flex-wrap items-center gap-1.5">
-          <FilterChip
-            active={category === "all"}
-            to={`/feed${query ? `?q=${encodeURIComponent(query)}` : ""}`}
-          >
-            All
-          </FilterChip>
+        {/* Category filters */}
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <FilterPill active={category === "all"} to={`/feed${query ? `?q=${encodeURIComponent(query)}` : ""}`}>
+            All topics
+          </FilterPill>
           {CATEGORIES.map((entry) => (
-            <FilterChip
+            <FilterPill
               key={entry.slug}
-              tone={entry.slug}
               active={category === entry.slug}
-              to={`/feed?category=${entry.slug}${
-                query ? `&q=${encodeURIComponent(query)}` : ""
-              }`}
+              to={`/feed?category=${entry.slug}${query ? `&q=${encodeURIComponent(query)}` : ""}`}
             >
               {entry.name}
-            </FilterChip>
+              {counts[entry.slug] ? (
+                <span className="ml-0.5 opacity-60">{counts[entry.slug]}</span>
+              ) : null}
+            </FilterPill>
           ))}
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center gap-3.5 text-[9.5px] uppercase tracking-[0.2em]">
-          <span className="text-muted-foreground">Order by</span>
+        {/* Sort + clear */}
+        <div className="mt-4 flex flex-wrap items-center gap-4 text-[12px]">
+          <span className="text-muted-foreground font-medium">Sort by</span>
           {SORTS.map((entry) => (
             <button
               key={entry.value}
               type="button"
               onClick={() => updateParams({ sort: entry.value })}
               className={cn(
-                "border-b pb-0.5 transition-colors",
-                sort === entry.value
-                  ? "border-ink text-ink"
-                  : "border-transparent text-ink-2 hover:text-ink",
+                "font-medium transition-colors",
+                sort === entry.value ? "text-ink" : "text-muted-foreground hover:text-ink"
               )}
             >
               {entry.label}
@@ -178,7 +174,7 @@ export default function Feed() {
             <button
               type="button"
               onClick={() => setSearchParams(new URLSearchParams(), { replace: true })}
-              className="ml-auto inline-flex items-center gap-1.5 text-ink-2 hover:text-ink"
+              className="ml-auto inline-flex items-center gap-1.5 text-muted-foreground hover:text-ink"
             >
               <X className="size-3" />
               Clear filters
@@ -187,57 +183,54 @@ export default function Feed() {
         </div>
       </header>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]">
+      {/* ── Main content ── */}
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_17rem]">
+        {/* Feed grid */}
         <section>
-          <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule-strong pb-3">
-            <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-              {category === "all" ? "Every category" : categoryName(category)}
-              {query ? ` · matching “${query}”` : ""}
-            </p>
-            <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-              {feed === undefined
-                ? "Loading…"
-                : plural(questions.length, "question")}
-            </p>
-          </div>
-
-          {feed === undefined ? <FeedSkeleton /> : null}
-
-          {feed !== undefined && questions.length === 0 ? (
+          {feed === undefined ? (
+            <FeedSkeleton />
+          ) : questions.length === 0 ? (
             <EmptyNote
-              className="mt-10"
+              className="mt-6"
               title="Nothing here yet."
               action={
-                <Button
-                  asChild
-                  className="rounded-sm px-5 text-[10px] uppercase tracking-[0.22em]"
-                >
+                <Button asChild className="rounded-full px-5 text-[12px] font-medium">
                   <Link to="/ask">Ask this question</Link>
                 </Button>
               }
             >
               {query
-                ? "No question matches that wording. Try a shorter phrase, or ask it yourself — you'll get a better answer than a search result."
-                : "This shelf is empty. Be the first to put a real question on it."}
+                ? "No question matches that wording. Try a shorter phrase, or ask it yourself."
+                : "This topic is empty. Be the first to put a real question on it."}
             </EmptyNote>
-          ) : null}
-
-          {questions.map((question, index) => (
-            <QuestionCard
-              key={question.id}
-              question={question}
-              index={index}
-              delay={Math.min(index, 6) * 60}
-            />
-          ))}
+          ) : (
+            <>
+              <p className="mb-5 text-[12px] text-muted-foreground">
+                {plural(questions.length, "question")}
+                {query ? ` matching "${query}"` : ""}
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {questions.map((question, index) => (
+                  <QuestionCard
+                    key={question.id}
+                    question={question}
+                    index={index}
+                    delay={Math.min(index, 6) * 50}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </section>
 
-        <aside className="space-y-12">
-          <div>
-            <h2 className="border-b border-rule-strong pb-3 text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+        {/* Sidebar */}
+        <aside className="space-y-8 lg:sticky lg:top-20 lg:self-start">
+          {/* Unanswered questions */}
+          <div className="rounded-xl border border-rule bg-surface p-5">
+            <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Waiting for an answer
             </h2>
-            <ul className="mt-5 space-y-5">
+            <ul className="mt-4 space-y-4">
               {openQuestions.map((question) => (
                 <li key={question.id}>
                   <Link
@@ -245,39 +238,40 @@ export default function Feed() {
                     className="group block"
                     style={toneStyle(question.category)}
                   >
-                    <span className="text-[8.5px] uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="text-[9.5px] uppercase tracking-[0.18em] text-muted-foreground">
                       {categoryName(question.category)}
                     </span>
-                    <span className="storii-link mt-0.5 block font-serif text-[14.5px] leading-snug text-ink decoration-(--tone)">
+                    <span className="storii-link mt-0.5 block text-[13.5px] leading-snug text-ink decoration-(--tone)">
                       {question.title}
                     </span>
+                    <span className="mt-0.5 block text-[11px] text-muted-foreground">
+                      {timeAgo(question.createdAt)} · no answers yet
+                    </span>
                   </Link>
-                  <p className="mt-1 text-[10px] text-muted-foreground">
-                    Asked {timeAgo(question.createdAt)} · no experiences yet
-                  </p>
                 </li>
               ))}
               {archive && openQuestions.length === 0 ? (
-                <li className="text-[14px] italic text-muted-foreground">
-                  Every question has at least one experience. Lovely.
+                <li className="text-[13px] italic text-muted-foreground">
+                  Every question has at least one answer. ✨
                 </li>
               ) : null}
             </ul>
           </div>
 
-          <div>
-            <h2 className="border-b border-rule-strong pb-3 text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-              Categories
+          {/* Categories */}
+          <div className="rounded-xl border border-rule bg-surface p-5">
+            <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Topics
             </h2>
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-4 space-y-2.5">
               {CATEGORIES.map((entry) => (
                 <li key={entry.slug}>
                   <Link
                     to={`/feed?category=${entry.slug}`}
-                    className="group flex items-baseline justify-between gap-4"
+                    className="flex items-center justify-between gap-3 text-[13px] text-ink-2 hover:text-ink"
                     style={toneStyle(entry.slug)}
                   >
-                    <span className="flex items-center gap-2.5 text-[14px] text-ink-2 group-hover:text-ink">
+                    <span className="flex items-center gap-2.5">
                       <span className="size-1.5 rounded-full bg-(--tone)" />
                       {entry.name}
                     </span>
@@ -290,15 +284,14 @@ export default function Feed() {
             </ul>
           </div>
 
-          <div>
-            <Link
-              to="/ask"
-              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-ink-2 hover:text-ink"
-            >
-              Ask your own question
-              <ArrowUpRight className="size-3" />
-            </Link>
-          </div>
+          {/* Ask CTA */}
+          <Link
+            to="/ask"
+            className="group flex items-center gap-2 text-[12px] font-medium text-ink-2 hover:text-ink"
+          >
+            Ask your own question
+            <ArrowUpRight className="size-3.5" />
+          </Link>
         </aside>
       </div>
     </PageShell>

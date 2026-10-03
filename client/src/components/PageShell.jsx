@@ -36,7 +36,7 @@ export function Kicker({ children, className }) {
   return (
     <p
       className={cn(
-        "text-[10px] uppercase tracking-[0.28em] text-muted-foreground",
+        "text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground",
         className,
       )}
     >
@@ -47,16 +47,16 @@ export function Kicker({ children, className }) {
 
 export function SectionHeading({ kicker, title, note, className }) {
   return (
-    <div className={cn("storii-blanket py-4", className)}>
+    <div className={cn("py-4", className)}>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
           {kicker ? <Kicker>{kicker}</Kicker> : null}
-          <h2 className="mt-1 font-serif text-2xl tracking-tight text-ink sm:text-[1.75rem]">
+          <h2 className="mt-1.5 font-serif text-2xl tracking-tight text-ink sm:text-[1.75rem]">
             {title}
           </h2>
         </div>
         {note ? (
-          <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
             {note}
           </p>
         ) : null}

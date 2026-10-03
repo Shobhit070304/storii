@@ -41,9 +41,8 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Storii editorial extensions */
-  --font-serif: "Times New Roman", "Nimbus Roman", "Liberation Serif", Times,
-    Georgia, serif;
+  /* Storii design tokens */
+  --font-serif: "Georgia", "Times New Roman", "Nimbus Roman", Times, serif;
   --color-paper: var(--paper);
   --color-paper-2: var(--paper-2);
   --color-ink: var(--ink);
@@ -55,161 +54,94 @@
   --color-moss: var(--moss);
   --color-ochre: var(--ochre);
   --color-plum: var(--plum);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
 }
 
-/* CHANGE VALUES FOR THEME — Papery: green paper, river ink, thin rules */
+/* Clean modern palette — warm white base, deep forest ink */
 :root {
-  --radius: 0.125rem;
+  --radius: 0.5rem;
 
-  /* Reading faces: serif for the archive, sans for lived experience. */
-  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system,
-    "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 
-  --paper: #eaf0df;
-  --paper-2: #f4f8eb;
-  --ink: #12211a;
-  --ink-2: #44543f;
-  --rule: color-mix(in srgb, #12211a 15%, transparent);
-  --rule-strong: color-mix(in srgb, #12211a 30%, transparent);
+  /* Core surfaces */
+  --paper: #fafaf8;
+  --paper-2: #f4f2ee;
+  --surface: #ffffff;
+  --surface-2: #f7f5f2;
+  --ink: #1a1a18;
+  --ink-2: #4a4a46;
+  --rule: rgba(26, 26, 24, 0.1);
+  --rule-strong: rgba(26, 26, 24, 0.2);
 
+  /* Shadcn/UI tokens */
   --background: var(--paper);
   --foreground: var(--ink);
-  --card: var(--paper-2);
+  --card: var(--surface);
   --card-foreground: var(--ink);
-  --popover: var(--paper-2);
+  --popover: var(--surface);
   --popover-foreground: var(--ink);
-  --primary: #1f3d27;
-  --primary-foreground: #f3f8e9;
-  --secondary: #dbe6ca;
+  --primary: #1a1a18;
+  --primary-foreground: #fafaf8;
+  --secondary: var(--paper-2);
   --secondary-foreground: var(--ink);
-  --muted: #dfe8d1;
-  --muted-foreground: #596852;
-  --accent: #d5e5bf;
+  --muted: #eeece8;
+  --muted-foreground: #737370;
+  --accent: #eeecea;
   --accent-foreground: var(--ink);
-  --destructive: #b23a2c;
+  --destructive: #c0392b;
   --border: var(--rule);
-  --input: color-mix(in srgb, #12211a 22%, transparent);
-  --ring: color-mix(in srgb, #12211a 45%, transparent);
+  --input: rgba(26, 26, 24, 0.18);
+  --ring: rgba(26, 26, 24, 0.35);
 
-  /* The coastal plate this palette is drawn from */
-  --sky: #a8dce4;
-  --cloud: #fbf8ee;
-  --hill: #8fbf6a;
-  --meadow: #e3d276;
-  --rock: #5c6e68;
-  --dome: #d1483c;
+  /* Category accent colors — warm, editorial */
+  --vermillion: #c0392b;
+  --inkblue: #2563ab;
+  --moss: #2d7a3a;
+  --ochre: #a16207;
+  --plum: #7c3aed;
 
-  /* Accents, read off the plate but leaning green: leaf, sea, hill,
-     meadow gold, dome red. */
-  --chart-1: #3d7a2f;
-  --chart-2: #2b6b78;
+  /* Chart colors */
+  --chart-1: #2d7a3a;
+  --chart-2: #2563ab;
   --chart-3: #6da54a;
-  --chart-4: #a87b1f;
-  --chart-5: #a34d3c;
+  --chart-4: #a16207;
+  --chart-5: #c0392b;
 
-  --vermillion: #b8452f;
-  --inkblue: #2b6b78;
-  --moss: #3d7a2f;
-  --ochre: #9c7a1c;
-  --plum: #8a4a5f;
-
-  --wash-1: color-mix(in srgb, var(--hill) 62%, transparent);
-  --wash-2: color-mix(in srgb, var(--meadow) 40%, transparent);
-  --wash-3: color-mix(in srgb, #5f9448 40%, transparent);
-
-  --sidebar: var(--paper-2);
+  --sidebar: var(--surface);
   --sidebar-foreground: var(--ink);
   --sidebar-primary: var(--ink);
-  --sidebar-primary-foreground: #f7f5ef;
-  --sidebar-accent: #dbe6ca;
+  --sidebar-primary-foreground: var(--paper);
+  --sidebar-accent: var(--paper-2);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--rule);
-  --sidebar-ring: color-mix(in srgb, #12211a 45%, transparent);
+  --sidebar-ring: rgba(26, 26, 24, 0.35);
 
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.dark {
-  --paper: #100e0b;
-  --paper-2: #17140f;
-  --ink: #efebe0;
-  --ink-2: #b3ab99;
-  --rule: color-mix(in srgb, #efebe0 15%, transparent);
-  --rule-strong: color-mix(in srgb, #efebe0 30%, transparent);
-
-  --background: var(--paper);
-  --foreground: var(--ink);
-  --card: var(--paper-2);
-  --card-foreground: var(--ink);
-  --popover: var(--paper-2);
-  --popover-foreground: var(--ink);
-  --primary: var(--ink);
-  --primary-foreground: #17140f;
-  --secondary: #221e17;
-  --secondary-foreground: var(--ink);
-  --muted: #1e1b14;
-  --muted-foreground: #a49c8a;
-  --accent: #272219;
-  --accent-foreground: var(--ink);
-  --destructive: #d4614c;
-  --border: var(--rule);
-  --input: color-mix(in srgb, #efebe0 20%, transparent);
-  --ring: color-mix(in srgb, #efebe0 40%, transparent);
-
-  --chart-1: #e0705f;
-  --chart-2: #7cc2cb;
-  --chart-3: #9cc877;
-  --chart-4: #e0b45c;
-  --chart-5: #cf8fa8;
-
-  /* The same plate, after dark */
-  --sky: #7cc2cb;
-  --cloud: #e8e4d6;
-  --hill: #9cc877;
-  --meadow: #e0b45c;
-  --rock: #93a29b;
-  --dome: #e0705f;
-
-  --vermillion: #e0705f;
-  --inkblue: #7cc2cb;
-  --moss: #9cc877;
-  --ochre: #e0b45c;
-  --plum: #cf8fa8;
-
-  --wash-1: color-mix(in srgb, #4b4322 40%, transparent);
-  --wash-2: color-mix(in srgb, #1e4448 48%, transparent);
-  --wash-3: color-mix(in srgb, #2d4523 40%, transparent);
-
-  --sidebar: var(--paper-2);
-  --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--ink);
-  --sidebar-primary-foreground: #17140f;
-  --sidebar-accent: #272219;
-  --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: var(--rule);
-  --sidebar-ring: color-mix(in srgb, #efebe0 40%, transparent);
+  /* Card elevation */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-nav: 0 1px 0 var(--rule), 0 8px 24px rgba(0,0,0,0.04);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
   }
   html {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
     font-size: 16px;
     line-height: 1.6;
   }
   ::selection {
-    background: color-mix(in srgb, var(--hill) 48%, transparent);
-  }
-  .dark ::selection {
-    background: color-mix(in srgb, var(--inkblue) 40%, transparent);
+    background: rgba(37, 99, 171, 0.15);
   }
   button:not([disabled]),
   [role="button"]:not([disabled]) {
@@ -218,47 +150,28 @@
 }
 
 @layer utilities {
-  /* Jittering paper fibre — the "papery" motion of the page */
-  .storii-grain {
-    background-image: var(--grain);
-    background-size: 120px 120px;
-    opacity: 0.07;
-    mix-blend-mode: multiply;
-    animation: storii-jitter 1.6s steps(2, end) infinite;
-  }
-  .dark .storii-grain {
-    opacity: 0.05;
-    mix-blend-mode: screen;
+  /* ── Typography utilities ── */
+  .font-serif {
+    font-family: var(--font-serif);
   }
 
-  /* Slow drifting colour washes behind the paper */
-  .storii-wash {
-    filter: blur(60px);
-    animation: storii-drift 34s ease-in-out infinite alternate;
-  }
-  .storii-wash-2 {
-    animation-duration: 46s;
-    animation-direction: alternate-reverse;
-  }
-  .storii-vignette {
-    background: radial-gradient(
-      120% 85% at 50% -10%,
-      transparent 58%,
-      color-mix(in srgb, var(--moss) 8%, transparent)
+  /* ── Link underline draw animation ── */
+  .storii-link {
+    background-image: linear-gradient(
+      var(--tone, var(--vermillion)),
+      var(--tone, var(--vermillion))
     );
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1.5px;
+    transition: background-size 0.3s ease;
+  }
+  .storii-link:hover,
+  .storii-link:focus-visible {
+    background-size: 100% 1.5px;
   }
 
-  /* A soft green canopy hanging over the top of the page. */
-  .storii-canopy {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--hill) 34%, transparent) 0%,
-      color-mix(in srgb, var(--meadow) 16%, transparent) 40%,
-      transparent 76%
-    );
-  }
-
-  /* Rules, masthead lines and other print furniture */
+  /* ── Structural rules ── */
   .storii-rule {
     border-bottom: 1px solid var(--rule);
   }
@@ -269,82 +182,79 @@
     border-top: 1px solid var(--rule-strong);
     border-bottom: 1px solid var(--rule-strong);
   }
-
-  /* Ink underline that draws itself on hover. Uses the surrounding
-     category tone when there is one, vermillion otherwise. */
-  .storii-link {
-    background-image: linear-gradient(
-      var(--tone, var(--vermillion)),
-      var(--tone, var(--vermillion))
-    );
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 0% 1.5px;
-    transition: background-size 0.35s ease;
-  }
-  .storii-link:hover,
-  .storii-link:focus-visible {
-    background-size: 100% 1.5px;
-  }
-
   .storii-caps {
     text-transform: uppercase;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.16em;
   }
 
+  /* ── Card styles ── */
+  .storii-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  }
+  .storii-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--rule-strong);
+    transform: translateY(-1px);
+  }
+
+  /* ── Entrance animation ── */
   .storii-rise {
-    animation: storii-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: storii-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  /* Answer column with a printed measure */
+  /* ── Text measure ── */
   .storii-measure {
     max-width: 68ch;
   }
 
-  /* Lived experience is set in a sans face — easier to read at length than
-     the serif the rest of the archive is printed in. */
+  /* ── Experiences use sans for readability ── */
   .storii-experience {
     font-family: var(--font-sans);
-    font-size: 17px;
+    font-size: 16.5px;
     line-height: 1.72;
     letter-spacing: 0.004em;
   }
-}
 
-@keyframes storii-jitter {
-  0% {
-    transform: translate3d(0, 0, 0);
+  /* ── Category badge dot ── */
+  .storii-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--tone, var(--ink-2));
+    flex-shrink: 0;
   }
-  25% {
-    transform: translate3d(-1px, 1px, 0);
-  }
-  50% {
-    transform: translate3d(1px, -1px, 0);
-  }
-  75% {
-    transform: translate3d(-1px, -1px, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
 
-@keyframes storii-drift {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
+  /* ── Marquee ── */
+  .storii-marquee-track {
+    display: flex;
+    width: max-content;
+    gap: 0;
+    animation: storii-marquee 40s linear infinite;
+    will-change: transform;
   }
-  50% {
-    transform: translate3d(3%, -3%, 0) scale(1.08);
+  .storii-marquee-track:hover {
+    animation-play-state: paused;
   }
-  100% {
-    transform: translate3d(-3%, 2%, 0) scale(1.02);
+
+  /* ── Glassmorphism nav ── */
+  .storii-glass {
+    background: rgba(250, 250, 248, 0.85);
+    backdrop-filter: blur(16px) saturate(1.6);
+    -webkit-backdrop-filter: blur(16px) saturate(1.6);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: var(--shadow-nav);
   }
 }
 
 @keyframes storii-rise {
   from {
     opacity: 0;
-    transform: translate3d(0, 12px, 0);
+    transform: translate3d(0, 14px, 0);
   }
   to {
     opacity: 1;
@@ -352,10 +262,20 @@
   }
 }
 
+@keyframes storii-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .storii-grain,
-  .storii-wash,
   .storii-rise {
+    animation: none !important;
+  }
+  .storii-marquee-track {
     animation: none !important;
   }
 }
